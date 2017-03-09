@@ -21,17 +21,17 @@ Se encuentra estructurado de la siguiente forma:
 >YYYYMMDD-HHMMss [Tipo] Información
 
 #### Tipos de Log
-- **Info [INF]: ** Mensajes informativos.
-- **Warning [WAR]: ** Mensajes de alerta.
-- **Error [ERR]: ** Mensajes de error graves (importante para analizar crashes).
-- **Window [WND]: ** Eventos de los dialogos.
-- **Journal [JOU]: ** Eventos de journal.
-- **Scriplet [SCP]: ** Mientras está activado escribe cada instrucción que corre en el log (**cuidado**, genera mucha cantidad de log y hace que Sellstation funcione mas lento).
-- **Dialogs [DLG]: ** Eventos de apertura + cierre de diálogos.
-- **DDs Read [DDR]: ** Eventos de lectura en DDs.
-- **DDs Write [DDW]: ** Eventos de escritura en DDs.
-- **Device [DVC]: ** Eventos de dispositivos.
-- **Journal Sync [JSC]: ** Eventos de sincronización de journal.
+- **Info [INF]:** Mensajes informativos.
+- **Warning [WAR]:** Mensajes de alerta.
+- **Error [ERR]:** Mensajes de error graves (importante para analizar crashes).
+- **Window [WND]:** Eventos de los dialogos.
+- **Journal [JOU]:** Eventos de journal.
+- **Scriplet [SCP]:** Mientras está activado escribe cada instrucción que corre en el log (**cuidado**, genera mucha cantidad de log y hace que Sellstation funcione mas lento).
+- **Dialogs [DLG]:** Eventos de apertura + cierre de diálogos.
+- **DDs Read [DDR]:** Eventos de lectura en DDs.
+- **DDs Write [DDW]:** Eventos de escritura en DDs.
+- **Device [DVC]:** Eventos de dispositivos.
+- **Journal Sync [JSC]:** Eventos de sincronización de journal.
 
 **Nota:** Los diferentes tipos de logs son habilitados y deshabilitados a medida que sea necesario utilizarlos. Por default se encuentran habilitados INF,WAR,ERR y JSC.
 
@@ -44,8 +44,8 @@ Esto se logra de la siguiente forma:
 DIALOGO=TIPO1,TIPO2,TIPO3
 TL0431=SCP,DDW,DVC
 ```
-**Nota: **Para investigar un crash, podemos utilizar el log de SCP para poder ver el último comando que corrio el core.  
-**Nota 2: **Dependiendo de cuantos logs sean habilitados, Sellstation puede funcionar mas lento (la lentitud solo es notable para el log SCP).
+**Nota:** Para investigar un crash, podemos utilizar el log de SCP para poder ver el último comando que corrio el core.  
+**Nota 2:** Dependiendo de cuantos logs sean habilitados, Sellstation puede funcionar mas lento (la lentitud solo es notable para el log SCP).
 
 #### Información importante que encontramos en el Log
 
@@ -76,6 +76,15 @@ TL0431=SCP,DDW,DVC
 >20170306-153745 [INF] Parametro "ignoreBackgroundColors" habilitado.  
 >20170306-153745 [INF] Debug para dialogos habilitado.  
 >20170306-153746 [INF] Forzando a utilizar journal local.
+
+- Detalle de sincronización del journal
+> 20170306-141736 [JSC] Sicronizando journals para OpNum 103  
+20170306-141736 [JSC] Tamaño JRemoto 0 b | Tamaño JLocal 654 b  
+20170306-141736 [JSC] Copiando registro Local con secuencia 123 del 2017-03-03 16:58:40  
+20170306-141736 [JSC] Copiando registro Local con secuencia 124 del 2017-03-03 16:58:43  
+20170306-141736 [JSC] Copiando registro Local con secuencia 125 del 2017-03-03 16:59:42  
+20170306-141736 [JSC] Copiando registro Local con secuencia 126 del 2017-03-03 16:59:42  
+20170306-141737 [JSC] Fin de sicronizacion Journals para OpNum 103  
 
 - Exceptions
 >20170307-104051 [INF] Exception MFC-DoCommand(Clearfield (dd[TEMP.AcctType[0]]))
@@ -110,4 +119,15 @@ Sellstation actualmente abre en caso de ser posible, un journal **local** y uno 
 Se daba la problemática que, cuando se **perdía conexión** con el servidor F, Sellstation continuaba su funcionamiento normalmente, con la diferencia de que **solo escribía journal localmente**. Cuando se reestablecia la conexión, se volvia a escribir en ambos, **sin hacer ningún tipo de copia o sincronización**, dejando operaciónes solo en el journal local. Cuando se volvia a abrir Sellstation, el journal local era reemplazado por el remoto (por comparación de fechas), **perdiendo las operaciónes** que estaban escritas solo en el journal local.
 
 #### Solución
+Para solucionar este inconveniente se realizaron cambios en:
+- **SSSysLog.exe y SSSysDll.dll:** Se comentó el algoritmo que se encargaba de reemplazar los journal comparando por fecha.
+- **Sellstat.exe:** En el core se agrego en el método Journal_Open, previo a la apertura de los journals, la sincronización de los mismos.
+  - Se **compara** el archivo SSJ local y remoto para buscar diferencias. Si son iguales, o si no se puede acceder al journal remoto, se continua la apertura normalmente.
+  - Se crea un tercer journal vacio, con el sufijo **"\_sync"** (ej. SSJ103_sync+SSS103_sync). En el caso de que ya exista es vaciado.
+  - Se recorren ambos journal, y **por cada operación comparamos la fecha. Si la del local es menor al remoto, se escribe al \_sync y viceversa**. En el caso de que la operación local y remota tengan la misma fecha, se escribe uno de los dos y se avanza al proximo registro en ambos journals.
+  - **Al finalizar** el recorrido de los journals, **se copia el journal sync reemplazando el local y el remoto**. Este journal tiene todas las operaciones.
 
+**Nota:** Por cada registro encontrado fuera de desincronizado, se escribirá en el **Sellstation.log** una linea indicando el **origen** de la diferencia, el número de **secuencia** de la operación, **fecha y hora** de la misma:
+>20170306-141736 [JSC] Copiando registro Local con secuencia 123 del 2017-03-03 16:58:40  
+
+:pig:
