@@ -72,12 +72,12 @@ TL0431=SCP,DDW,DVC
 
 - SUIT Actual
 ```text
-20170306-154743 [INF] Loading suit **C:\SSCAJA**
+20170306-154743 [INF] Loading suit C:\SSCAJA
 ```
 
 - Usuario, OpNum, Acceso
 ```text
-20170306-154747 [INF] Teller **B035460** OpNum **103** Access **249**
+20170306-154747 [INF] Teller B035460 OpNum 103 Access 249
 ```
 
 - Utilización de aplicaciónes externas
