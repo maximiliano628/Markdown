@@ -17,8 +17,10 @@
 ## 2. Sellstation.log
 Es el log del core que contiene todo tipo de información referente al mismo. Es creado la primera vez que abrimos Sellstation, y en caso de que sea mayor a 5mb, se copia a un archivo historico y se limpia.  
 Se encuentra estructurado de la siguiente forma:  
->20170306-154743 [INF] SELLSTATION Application Start  
->YYYYMMDD-HHMMss [Tipo] Información
+```text
+20170306-154743 [INF] SELLSTATION Application Start  
+YYYYMMDD-HHMMss [Tipo] Información
+```
 
 #### Tipos de Log
 - **Info [INF]:** Mensajes informativos.
@@ -50,44 +52,62 @@ TL0431=SCP,DDW,DVC
 #### Información importante que encontramos en el Log
 
 - Inicio + Cierre de la aplicación
->20170306-154743 [INF] SELLSTATION Application Start  
->20170306-154743 [INF] Sellstation no cerro correctamente.  
->20170306-164235 [INF] SELLSTATION Exiting...
+```text
+20170306-154743 [INF] SELLSTATION Application Start  
+20170306-154743 [INF] Sellstation no cerro correctamente.  
+20170306-164235 [INF] SELLSTATION Exiting...
+```
 
 - Versión + Revisión del Core
->20170306-152120 [INF] Version 3.5.0 Rev 1.0.8k [RELEASE]  
->20170306-152120 [INF] Version 3.5.0 Rev 1.0.9dev [DEBUG]
+```text
+20170306-152120 [INF] Version 3.5.0 Rev 1.0.8k [RELEASE]  
+20170306-152120 [INF] Version 3.5.0 Rev 1.0.9dev [DEBUG]
+```
 
 - Estados del Logger
->20170306-154743 [INF] Logger [INF] enabled  
->20170306-154743 [INF] Logger [SCP] disabled
+```text
+20170306-154743 [INF] Logger [INF] enabled  
+20170306-154743 [INF] Logger [SCP] disabled
+```
 
 - SUIT Actual
->20170306-154743 [INF] Loading suit **C:\SSCAJA**
+```text
+20170306-154743 [INF] Loading suit **C:\SSCAJA**
+```
 
 - Usuario, OpNum, Acceso
->20170306-154747 [INF] Teller **B035460** OpNum **103** Access **249**
+```text
+20170306-154747 [INF] Teller **B035460** OpNum **103** Access **249**
+```
 
 - Utilización de aplicaciónes externas
->20170306-174032 [INF] WinExec: C:\Sellstat\SellStationSyncService\SincronizadorDeImagenes.exe
+```text
+20170306-174032 [INF] WinExec: C:\Sellstat\SellStationSyncService\SincronizadorDeImagenes.exe
+```
 
 - Parámetros de Sellstat.ini habilitados
->20170306-153745 [INF] Parametro "HostSimMode" habilitado.
->20170306-153745 [INF] Parametro "ignoreBackgroundColors" habilitado.  
->20170306-153745 [INF] Debug para dialogos habilitado.  
->20170306-153746 [INF] Forzando a utilizar journal local.
+```text
+20170306-153745 [INF] Parametro "HostSimMode" habilitado.
+20170306-153745 [INF] Parametro "ignoreBackgroundColors" habilitado.  
+20170306-153745 [INF] Debug para dialogos habilitado.  
+20170306-153746 [INF] Forzando a utilizar journal local.
+```
 
 - Detalle de sincronización del journal
-> 20170306-141736 [JSC] Sicronizando journals para OpNum 103  
+```text
+20170306-141736 [JSC] Sicronizando journals para OpNum 103  
 20170306-141736 [JSC] Tamaño JRemoto 0 b | Tamaño JLocal 654 b  
 20170306-141736 [JSC] Copiando registro Local con secuencia 123 del 2017-03-03 16:58:40  
 20170306-141736 [JSC] Copiando registro Local con secuencia 124 del 2017-03-03 16:58:43  
 20170306-141736 [JSC] Copiando registro Local con secuencia 125 del 2017-03-03 16:59:42  
 20170306-141736 [JSC] Copiando registro Local con secuencia 126 del 2017-03-03 16:59:42  
 20170306-141737 [JSC] Fin de sicronizacion Journals para OpNum 103  
+```
 
 - Exceptions
->20170307-104051 [INF] Exception MFC-DoCommand(Clearfield (dd[TEMP.AcctType[0]]))
+```text
+20170307-104051 [INF] Exception MFC-DoCommand(Clearfield (dd[TEMP.AcctType[0]]))
+```
 
 ## 3. Parámetros de Sellstat.ini
 #### Ignore Background Colors  
@@ -128,6 +148,8 @@ Para solucionar este inconveniente se realizaron cambios en:
   - **Al finalizar** el recorrido de los journals, **se copia el journal sync reemplazando el local y el remoto**. Este journal tiene todas las operaciones.
 
 **Nota:** Por cada registro encontrado fuera de desincronizado, se escribirá en el **Sellstation.log** una linea indicando el **origen** de la diferencia, el número de **secuencia** de la operación, **fecha y hora** de la misma:
->20170306-141736 [JSC] Copiando registro Local con secuencia 123 del 2017-03-03 16:58:40  
+```text
+20170306-141736 [JSC] Copiando registro Local con secuencia 123 del 2017-03-03 16:58:40  
+```
 
 :pig:
