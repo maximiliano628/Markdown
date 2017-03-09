@@ -151,5 +151,3 @@ Para solucionar este inconveniente se realizaron cambios en:
 ```text
 20170306-141736 [JSC] Copiando registro Local con secuencia 123 del 2017-03-03 16:58:40  
 ```
-
-:pig:
