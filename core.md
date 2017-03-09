@@ -110,7 +110,4 @@ Sellstation actualmente abre en caso de ser posible, un journal **local** y uno 
 Se daba la problemática que, cuando se **perdía conexión** con el servidor F, Sellstation continuaba su funcionamiento normalmente, con la diferencia de que **solo escribía journal localmente**. Cuando se reestablecia la conexión, se volvia a escribir en ambos, **sin hacer ningún tipo de copia o sincronización**, dejando operaciónes solo en el journal local. Cuando se volvia a abrir Sellstation, el journal local era reemplazado por el remoto (por comparación de fechas), **perdiendo las operaciónes** que estaban escritas solo en el journal local.
 
 #### Solución
-1000
-837035
-universal assistance
-0800-222-8565
+
