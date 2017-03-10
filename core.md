@@ -14,6 +14,9 @@
  - Agregado parámetro forzarJournalLocal
  - Limpieza general de logs antiguos
 
+##### Revision 1.0.9a - 10/03/2017
+- Agregado parámetro forzarJournalLocal
+
 ## 2. Sellstation.log
 Es el log del core que contiene todo tipo de información referente al mismo. Es creado la primera vez que abrimos Sellstation, y en caso de que sea mayor a 5mb, se copia a un archivo historico y se limpia.  
 Se encuentra estructurado de la siguiente forma:  
@@ -131,7 +134,15 @@ Fuerza al core a trabajar solo con el journal local.
 [SELLSTAT]
 forzarJournalLocal=0|1
 ```
-**Nota:** Este parámetro fue creado para realizar las pruebas de sincronización de journal para la revisión 1.0.9.
+**Nota:** Este parámetro fue creado para realizar las pruebas de sincronización de journal para la revisión 1.0.9a. No debe usarse en conjunto de la marca forzarJournalRemoto.
+
+#### Forzar Journal Remoto
+Fuerza al core a trabajar solo con el journal remoto.
+```ini
+[SELLSTAT]
+forzarJournalRemoto=0|1
+```
+**Nota:** Este parámetro fue creado para realizar las pruebas de sincronización de journal para la revisión 1.0.9a. No debe usarse en conjunto de la marca forzarJournalLocal.
 
 ## 3. Sincronización de Journals
 #### Problematica
